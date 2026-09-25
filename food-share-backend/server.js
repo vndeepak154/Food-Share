@@ -52,25 +52,32 @@ if (hasFrontendBuild) {
   app.use(express.static(frontendBuildPath));
 }
 
-// Test Database Connection
-sequelize.authenticate()
-  .then(() => {
-    console.log('✅ MySQL connected successfully');
-    
-    // Sync database models
-    return sequelize.sync({ alter: false });
-  })
-  .then(() => {
-    console.log('✅ Database tables synced');
-  })
-  .catch(err => {
-    console.error('❌ Database connection error:', err.message);
-    console.error('👉 Tip: Check your DB_HOST, DB_USER, DB_PASS, DATABASE_URL, or DB_SSL settings.');
-    // Do not crash immediately in production container environments to allow inspectability
-    if (process.env.NODE_ENV !== 'production') {
-      process.exit(1);
-    }
-  });
+// Connect to MySQL with resilient retry logic (prevents container crash loops if MySQL starts slightly after backend)
+let isDbConnected = false;
+
+const connectWithRetry = (retries = 10, delayMs = 3000) => {
+  sequelize.authenticate()
+    .then(() => {
+      isDbConnected = true;
+      console.log('✅ MySQL connected successfully');
+      return sequelize.sync({ alter: false });
+    })
+    .then(() => {
+      console.log('✅ Database tables synced');
+    })
+    .catch(err => {
+      isDbConnected = false;
+      console.error(`⚠️ MySQL connection pending (${err.message})`);
+      if (retries > 0) {
+        console.log(`⏳ Retrying MySQL connection in ${delayMs / 1000}s... (${retries} attempts left)`);
+        setTimeout(() => connectWithRetry(retries - 1, delayMs), delayMs);
+      } else {
+        console.error('❌ Failed to connect to MySQL after maximum retries. Please check your Railway MySQL service.');
+      }
+    });
+};
+
+connectWithRetry();
 
 // Health check (used by cloud platforms like Render, Railway, AWS for health probes)
 app.get('/health', (req, res) => {
@@ -229,8 +236,10 @@ if (hasFrontendBuild) {
   });
 }
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+const PORT = Number(process.env.PORT) || 5000;
+const HOST = '0.0.0.0';
+
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Server running on http://${HOST}:${PORT}`);
 });
 
