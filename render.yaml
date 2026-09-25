@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: foodshare
+    runtime: node
+    plan: free
+    buildCommand: npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      # Connect your cloud MySQL database (e.g. from TiDB Cloud, Aiven, or Railway)
+      - key: DATABASE_URL
+        sync: false
+      - key: DB_SSL
+        value: "true"

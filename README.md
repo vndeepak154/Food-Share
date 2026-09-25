@@ -65,8 +65,9 @@ npm start            # Runs on http://localhost:3000
 
 ## Detailed Guides
 
-- **MySQL Setup:** See `food-share-backend/MYSQL_SETUP.md`
-- **Deployment:** See `DEPLOYMENT_GUIDE.md` (Render + Netlify)
+- **Deploy on Railway & Vercel:** See [RAILWAY_VERCEL_DEPLOYMENT.md](RAILWAY_VERCEL_DEPLOYMENT.md)
+- **All Deployment Options (Render, Docker, Netlify):** See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+- **Local MySQL Setup:** See [food-share-backend/MYSQL_SETUP.md](food-share-backend/MYSQL_SETUP.md)
 
 ## Tech Stack
 

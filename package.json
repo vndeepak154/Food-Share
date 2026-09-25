@@ -1,0 +1,18 @@
+{
+  "name": "foodshare-fullstack",
+  "version": "1.0.0",
+  "description": "FoodShare - Connect food donors with recipients (Fullstack MySQL & React)",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install --prefix food-share-backend && npm install --prefix food-share-frontend",
+    "build": "npm install --prefix food-share-backend && npm install --prefix food-share-frontend && npm run build --prefix food-share-frontend",
+    "build:frontend": "npm install --prefix food-share-frontend && npm run build --prefix food-share-frontend",
+    "start": "node food-share-backend/server.js",
+    "backend": "npm start --prefix food-share-backend",
+    "frontend": "npm start --prefix food-share-frontend",
+    "db:sync": "npm run db:sync --prefix food-share-backend"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
