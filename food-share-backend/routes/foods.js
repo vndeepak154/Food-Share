@@ -284,8 +284,8 @@ router.post('/:id/reserve', authenticateToken, async (req, res) => {
   }
 });
 
-// Mark food as taken
-router.post('/:id/mark-taken', authenticateToken, async (req, res) => {
+// Mark food as taken / delivered (Donors only)
+const handleMarkDelivered = async (req, res) => {
   try {
     const food = await Food.findByPk(req.params.id);
 
@@ -293,7 +293,7 @@ router.post('/:id/mark-taken', authenticateToken, async (req, res) => {
       return res.status(404).json({ message: 'Food not found' });
     }
 
-    // Only donor can mark as taken
+    // Only donor who created the listing can mark as delivered
     if (food.donorId !== req.user.userId) {
       return res.status(403).json({ message: 'Not authorized' });
     }
@@ -303,21 +303,34 @@ router.post('/:id/mark-taken', authenticateToken, async (req, res) => {
       takenAt: new Date()
     });
 
+    const updatedFood = await Food.findByPk(food.id, {
+      include: [
+        { association: 'donor', attributes: ['id', 'name', 'organizationName', 'phone'] },
+        { association: 'reservedBy', attributes: ['id', 'name', 'organizationName', 'phone', 'email'] }
+      ]
+    });
+
     res.json({
-      message: 'Food marked as taken',
-      food
+      message: 'Food marked as delivered successfully',
+      food: updatedFood
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
-});
+};
 
-// Get my listings (for donors)
+router.post('/:id/mark-taken', authenticateToken, handleMarkDelivered);
+router.post('/:id/mark-delivered', authenticateToken, handleMarkDelivered);
+
+// Get my listings (for donors - includes recipient details if reserved/delivered)
 router.get('/user/my-listings', authenticateToken, async (req, res) => {
   try {
     const foods = await Food.findAll({
       where: { donorId: req.user.userId },
+      include: [
+        { association: 'reservedBy', attributes: ['id', 'name', 'organizationName', 'phone', 'email'] }
+      ],
       order: [['createdAt', 'DESC']]
     });
 

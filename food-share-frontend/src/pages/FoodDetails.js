@@ -291,14 +291,14 @@ function FoodDetails({ user }) {
               disabled={actionLoading}
             >
               <CheckCheck size={18} />
-              <span>{actionLoading ? 'Updating...' : 'Mark as Picked Up / Taken'}</span>
+              <span>{actionLoading ? 'Updating...' : 'Mark as Delivered to Recipient'}</span>
             </button>
           )}
 
-          {food.status === 'taken' && (
+          {(food.status === 'taken' || food.status === 'delivered') && (
             <div className="details-state-note">
               <CheckCircle2 size={18} />
-              <span>This food has already been collected and fulfilled.</span>
+              <span>This food has been successfully delivered and fulfilled.</span>
             </div>
           )}
 

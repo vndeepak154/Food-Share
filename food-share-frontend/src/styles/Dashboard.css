@@ -380,10 +380,110 @@
   border: 1px solid var(--warning-border);
 }
 
-.status-taken {
-  background: #F1F5F9;
-  color: #475569;
-  border: 1px solid #CBD5E1;
+.status-taken,
+.status-delivered {
+  background: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+.delivered-card {
+  border-left: 4px solid var(--success-color);
+}
+
+.delivered-banner {
+  padding: 8px 18px;
+  background-color: #ECFDF5;
+  border-top: 1px solid #A7F3D0;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  color: #065F46;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.recipient-info-box {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.8125rem;
+}
+
+.recipient-info-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.btn-delivered {
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: #FFFFFF !important;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+  transition: all var(--transition-normal);
+}
+
+.btn-delivered:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  transform: translateY(-1px);
+}
+
+.dashboard-section-block {
+  margin-top: 24px;
+  margin-bottom: 36px;
+}
+
+.section-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.section-block-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-block-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-counter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 9px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--primary-light);
+  color: var(--primary-color);
+}
+
+.section-counter-badge.success {
+  background: #ECFDF5;
+  color: #059669;
 }
 
 .status-expired {
