@@ -60,11 +60,13 @@ const Food = sequelize.define('Food', {
   },
   latitude: {
     type: DataTypes.FLOAT,
-    allowNull: false
+    allowNull: true,
+    defaultValue: 0
   },
   longitude: {
     type: DataTypes.FLOAT,
-    allowNull: false
+    allowNull: true,
+    defaultValue: 0
   },
   status: {
     type: DataTypes.ENUM('available', 'reserved', 'taken', 'expired'),

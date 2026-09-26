@@ -6,7 +6,6 @@ import {
   Mail, 
   Phone, 
   MapPin, 
-  LocateFixed, 
   ShieldCheck, 
   CheckCircle2, 
   AlertCircle,
@@ -17,7 +16,6 @@ import '../styles/Form.css';
 function Profile({ user, setUser }) {
   const [formData, setFormData] = useState(user || {});
   const [loading, setLoading] = useState(false);
-  const [locating, setLocating] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -25,28 +23,6 @@ function Profile({ user, setUser }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleGetLocation = () => {
-    if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser.');
-      return;
-    }
-    setLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setFormData(prev => ({
-          ...prev,
-          latitude: pos.coords.latitude.toFixed(4),
-          longitude: pos.coords.longitude.toFixed(4)
-        }));
-        setLocating(false);
-      },
-      (err) => {
-        setLocating(false);
-        alert('Could not retrieve current location.');
-      }
-    );
   };
 
   const handleSubmit = async (e) => {
@@ -176,7 +152,7 @@ function Profile({ user, setUser }) {
           </fieldset>
 
           <fieldset className="form-fieldset">
-            <legend className="fieldset-legend">Location & Operating Coordinates</legend>
+            <legend className="fieldset-legend">Location & Address</legend>
 
             <div className="form-grid-2col">
               <div className="form-group-corporate">
@@ -202,41 +178,6 @@ function Profile({ user, setUser }) {
                   value={formData.city || ''} 
                   onChange={handleChange} 
                   placeholder="e.g., New York, Mumbai"
-                  required 
-                />
-              </div>
-            </div>
-
-            <div className="coordinates-card" style={{ marginTop: '12px' }}>
-              <div className="coordinates-header">
-                <span className="coordinates-label">Geographic Coordinates</span>
-                <button 
-                  type="button" 
-                  onClick={handleGetLocation} 
-                  disabled={locating}
-                  className="btn-location-autofill"
-                >
-                  <LocateFixed size={14} />
-                  <span>{locating ? 'Locating...' : 'Detect Coordinates'}</span>
-                </button>
-              </div>
-              <div className="form-grid-2col">
-                <input 
-                  type="number" 
-                  step="0.0001" 
-                  name="latitude" 
-                  value={formData.latitude || ''} 
-                  onChange={handleChange} 
-                  placeholder="Latitude (e.g. 28.7041)"
-                  required 
-                />
-                <input 
-                  type="number" 
-                  step="0.0001" 
-                  name="longitude" 
-                  value={formData.longitude || ''} 
-                  onChange={handleChange} 
-                  placeholder="Longitude (e.g. 77.1025)"
                   required 
                 />
               </div>

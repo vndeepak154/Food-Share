@@ -23,9 +23,12 @@ router.post('/register', async (req, res) => {
     } = req.body;
 
     // Validation
-    if (!name || !email || !password || !phone || !userType || !organizationName || !address || !city || latitude === undefined || longitude === undefined) {
+    if (!name || !email || !password || !phone || !userType || !organizationName || !address || !city) {
       return res.status(400).json({ message: 'All fields required' });
     }
+
+    const lat = (latitude !== undefined && latitude !== null && !isNaN(Number(latitude))) ? parseFloat(latitude) : 0;
+    const lng = (longitude !== undefined && longitude !== null && !isNaN(Number(longitude))) ? parseFloat(longitude) : 0;
 
     // Check if user exists
     const existingUser = await User.findOne({ where: { email } });
@@ -43,8 +46,8 @@ router.post('/register', async (req, res) => {
       organizationName,
       address,
       city,
-      latitude,
-      longitude,
+      latitude: lat,
+      longitude: lng,
       description
     });
 

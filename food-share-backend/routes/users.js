@@ -38,8 +38,8 @@ router.put('/profile', authenticateToken, async (req, res) => {
     if (description) user.description = description;
     if (address) user.address = address;
     if (city) user.city = city;
-    if (latitude !== undefined) user.latitude = latitude;
-    if (longitude !== undefined) user.longitude = longitude;
+    if (latitude !== undefined && latitude !== '' && !isNaN(Number(latitude))) user.latitude = parseFloat(latitude);
+    if (longitude !== undefined && longitude !== '' && !isNaN(Number(longitude))) user.longitude = parseFloat(longitude);
 
     await user.save();
 

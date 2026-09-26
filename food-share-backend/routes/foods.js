@@ -26,9 +26,12 @@ router.post('/', authenticateToken, async (req, res) => {
     } = req.body;
 
     // Validation
-    if (!foodName || !category || !quantity || !expiryTime || !address || !city || latitude === undefined || longitude === undefined) {
+    if (!foodName || !category || !quantity || !expiryTime || !address || !city) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
+
+    const lat = (latitude !== undefined && latitude !== null && !isNaN(Number(latitude))) ? parseFloat(latitude) : 0;
+    const lng = (longitude !== undefined && longitude !== null && !isNaN(Number(longitude))) ? parseFloat(longitude) : 0;
 
     const food = await Food.create({
       donorId: req.user.userId,
@@ -41,8 +44,8 @@ router.post('/', authenticateToken, async (req, res) => {
       images: images || [],
       locationAddress: address,
       locationCity: city,
-      latitude,
-      longitude,
+      latitude: lat,
+      longitude: lng,
       contactPerson,
       contactPhone,
       specialRequirements
@@ -88,6 +91,7 @@ router.get('/search', async (req, res) => {
 
     // Filter by distance (simple Haversine)
     const nearby = foods.filter(food => {
+      if (!food.latitude || !food.longitude) return false;
       const R = 6371; // Earth's radius in km
       const dLat = (food.latitude - lat) * Math.PI / 180;
       const dLng = (food.longitude - lng) * Math.PI / 180;
@@ -188,8 +192,8 @@ router.put('/:id', authenticateToken, async (req, res) => {
     if (expiryTime !== undefined) updateData.expiryTime = new Date(expiryTime);
     if (address !== undefined) updateData.locationAddress = address;
     if (city !== undefined) updateData.locationCity = city;
-    if (latitude !== undefined) updateData.latitude = parseFloat(latitude);
-    if (longitude !== undefined) updateData.longitude = parseFloat(longitude);
+    if (latitude !== undefined && latitude !== null && !isNaN(Number(latitude))) updateData.latitude = parseFloat(latitude);
+    if (longitude !== undefined && longitude !== null && !isNaN(Number(longitude))) updateData.longitude = parseFloat(longitude);
     if (contactPerson !== undefined) updateData.contactPerson = contactPerson;
     if (contactPhone !== undefined) updateData.contactPhone = contactPhone;
     if (specialRequirements !== undefined) updateData.specialRequirements = specialRequirements;

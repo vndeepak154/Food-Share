@@ -13,7 +13,6 @@ import {
   User as UserIcon, 
   AlertCircle, 
   ArrowLeft, 
-  LocateFixed,
   Sparkles
 } from 'lucide-react';
 import '../styles/Form.css';
@@ -35,7 +34,6 @@ function CreateListing() {
     specialRequirements: ''
   });
   const [loading, setLoading] = useState(false);
-  const [locating, setLocating] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -51,35 +49,6 @@ function CreateListing() {
 
   const setCategory = (cat) => {
     setFormData(prev => ({ ...prev, category: cat }));
-  };
-
-  const handleGetLocation = () => {
-    if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser.');
-      return;
-    }
-    setLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setFormData(prev => ({
-          ...prev,
-          latitude: pos.coords.latitude.toFixed(4),
-          longitude: pos.coords.longitude.toFixed(4)
-        }));
-        setLocating(false);
-      },
-      (err) => {
-        console.warn('Geolocation error:', err.message);
-        setLocating(false);
-        // Delhi default fallback
-        setFormData(prev => ({
-          ...prev,
-          latitude: '28.6139',
-          longitude: '77.2090'
-        }));
-      },
-      { timeout: 8000 }
-    );
   };
 
   const handleSubmit = async (e) => {
@@ -262,7 +231,7 @@ function CreateListing() {
 
           {/* Section 3: Location Details */}
           <fieldset className="form-fieldset">
-            <legend className="fieldset-legend">3. Pickup Location & Coordinates</legend>
+            <legend className="fieldset-legend">3. Pickup Location</legend>
 
             <div className="form-grid-2col">
               <div className="form-group-corporate">
@@ -290,42 +259,6 @@ function CreateListing() {
                   placeholder="e.g., Delhi, Mumbai, New York"
                   value={formData.city}
                   onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Coordinates with Auto-Locate Button */}
-            <div className="coordinates-card" style={{ marginTop: '12px' }}>
-              <div className="coordinates-header">
-                <span className="coordinates-label">Geographic Coordinates (for Food Map placement)</span>
-                <button 
-                  type="button" 
-                  onClick={handleGetLocation} 
-                  disabled={locating}
-                  className="btn-location-autofill"
-                >
-                  <LocateFixed size={14} />
-                  <span>{locating ? 'Locating...' : 'Detect Coordinates'}</span>
-                </button>
-              </div>
-              <div className="form-grid-2col">
-                <input
-                  type="number"
-                  name="latitude"
-                  value={formData.latitude}
-                  onChange={handleChange}
-                  step="0.0001"
-                  placeholder="Latitude (e.g. 28.7041)"
-                  required
-                />
-                <input
-                  type="number"
-                  name="longitude"
-                  value={formData.longitude}
-                  onChange={handleChange}
-                  step="0.0001"
-                  placeholder="Longitude (e.g. 77.1025)"
                   required
                 />
               </div>

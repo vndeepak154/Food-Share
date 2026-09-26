@@ -12,8 +12,7 @@ import {
   MapPin, 
   Compass, 
   ArrowRight, 
-  AlertCircle,
-  LocateFixed
+  AlertCircle
 } from 'lucide-react';
 import '../styles/Auth.css';
 
@@ -33,7 +32,6 @@ function Register({ onRegister }) {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [locating, setLocating] = useState(false);
   const navigate = useNavigate();
 
   const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -44,35 +42,6 @@ function Register({ onRegister }) {
       ...prev,
       [name]: value
     }));
-  };
-
-  const handleGetLocation = () => {
-    if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser.');
-      return;
-    }
-    setLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setFormData(prev => ({
-          ...prev,
-          latitude: pos.coords.latitude.toFixed(4),
-          longitude: pos.coords.longitude.toFixed(4)
-        }));
-        setLocating(false);
-      },
-      (err) => {
-        console.warn('Geolocation error:', err.message);
-        setLocating(false);
-        // Fallback default coordinates
-        setFormData(prev => ({
-          ...prev,
-          latitude: '28.6139',
-          longitude: '77.2090'
-        }));
-      },
-      { timeout: 8000 }
-    );
   };
 
   const handleSubmit = async (e) => {
@@ -268,42 +237,6 @@ function Register({ onRegister }) {
                   required
                 />
               </div>
-            </div>
-          </div>
-
-          {/* Coordinates Row with Auto-Fill Button */}
-          <div className="coordinates-card">
-            <div className="coordinates-header">
-              <span className="coordinates-label">Geographic Coordinates (for map discovery)</span>
-              <button 
-                type="button" 
-                onClick={handleGetLocation} 
-                disabled={locating}
-                className="btn-location-autofill"
-              >
-                <LocateFixed size={14} />
-                <span>{locating ? 'Locating...' : 'Use My Location'}</span>
-              </button>
-            </div>
-            <div className="form-grid-2col">
-              <input
-                type="number"
-                name="latitude"
-                value={formData.latitude}
-                onChange={handleChange}
-                step="0.0001"
-                placeholder="Latitude (e.g. 28.7041)"
-                required
-              />
-              <input
-                type="number"
-                name="longitude"
-                value={formData.longitude}
-                onChange={handleChange}
-                step="0.0001"
-                placeholder="Longitude (e.g. 77.1025)"
-                required
-              />
             </div>
           </div>
 

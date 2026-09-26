@@ -13,7 +13,6 @@ import {
   User as UserIcon, 
   AlertCircle, 
   ArrowLeft, 
-  LocateFixed,
   Sparkles,
   Save,
   CheckCircle2,
@@ -42,7 +41,6 @@ function EditListing() {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [locating, setLocating] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -108,29 +106,6 @@ function EditListing() {
       ...prev,
       expiryTime: formatForInput(now)
     }));
-  };
-
-  const handleGetLocation = () => {
-    if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser.');
-      return;
-    }
-    setLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setFormData(prev => ({
-          ...prev,
-          latitude: pos.coords.latitude.toFixed(4),
-          longitude: pos.coords.longitude.toFixed(4)
-        }));
-        setLocating(false);
-      },
-      (err) => {
-        setLocating(false);
-        alert('Could not retrieve current location.');
-      },
-      { timeout: 8000 }
-    );
   };
 
   const handleSubmit = async (e) => {
@@ -400,41 +375,6 @@ function EditListing() {
                   placeholder="e.g., Delhi, Mumbai, New York"
                   value={formData.city}
                   onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="coordinates-card" style={{ marginTop: '12px' }}>
-              <div className="coordinates-header">
-                <span className="coordinates-label">Geographic Coordinates</span>
-                <button 
-                  type="button" 
-                  onClick={handleGetLocation} 
-                  disabled={locating}
-                  className="btn-location-autofill"
-                >
-                  <LocateFixed size={14} />
-                  <span>{locating ? 'Locating...' : 'Detect Current Location'}</span>
-                </button>
-              </div>
-              <div className="form-grid-2col">
-                <input
-                  type="number"
-                  name="latitude"
-                  value={formData.latitude}
-                  onChange={handleChange}
-                  step="0.0001"
-                  placeholder="Latitude (e.g. 28.7041)"
-                  required
-                />
-                <input
-                  type="number"
-                  name="longitude"
-                  value={formData.longitude}
-                  onChange={handleChange}
-                  step="0.0001"
-                  placeholder="Longitude (e.g. 77.1025)"
                   required
                 />
               </div>
