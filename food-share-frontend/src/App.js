@@ -73,7 +73,7 @@ function App() {
   }
 
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <div className="App">
         {/* Atmospheric Corporate Trust background gradient orbs */}
         <div className="bg-ambient-blob bg-blob-1" aria-hidden="true" />
